@@ -1,35 +1,76 @@
 import os.path
 
 
-def Main():
+def TakeNotes():
   isRunning = True
   print(bcolors.HEADER + "Welcome to TakeNotes!" + bcolors.ENDC)
-  commandList = bcolors.BOLD + \
-  "create: Create a txt file\ndelete: Delete a file\nread: Read a file\nwrite: Write to a file\nhelp: List all commands" \
-  + bcolors.ENDC
-  print(commandList)
+  print(getCommandList())
   while isRunning:
     commandInput = input(">>> ")
     if commandInput == "help":
-      print(commandList)
+      print(getCommandList())
+    elif commandInput == "exit":
+      isRunning = False
     elif commandInput == "create":
-      fileNameCreate = input("Enter a name for the file: ")
-      try:
-        with open(fileNameCreate + ".txt", 'x'):
-          print("File created!")
-      except Exception as exception:
-        print(exception)
-        continue
+      createFile()
     elif commandInput == "delete":
-      fileNameDelete = input("Enter the file name to delete: ")
-      try:
-        os.remove(os.getcwd() + "\\" + fileNameDelete + ".txt")
-        print("File deleted!")
-      except Exception as exception:
-        print(exception)
-        continue
+      deleteFile()
+    elif commandInput == "read":
+      readFile()
     else:
-      print("Command not found. Run help to list all commands.")
+      print("Command not found. Run 'help' to list all commands.")
+
+
+def getCommandList():
+  commandList = bcolors.BOLD + \
+  "create: Create a txt file\n \
+  delete: Delete a file\n \
+  read: Read a file\n \
+  write: Write to a file\n \
+  isopen: Check if a file is open in current Python process\n \
+  help: List all commands\n \
+  exit: Exit program" \
+  + bcolors.ENDC
+  return commandList
+
+
+def createFile():
+  fileNameCreate = getTextFile()
+  try:
+    fileCreated = open(fileNameCreate, "x")
+    print(f"File {fileCreated.name} created!")
+  except Exception as exception:
+    print(exception)
+  fileCreated.close()
+
+
+def deleteFile():
+  fileNameDelete = getTextFile()
+  try:
+    os.remove(os.getcwd() + "\\" + fileNameDelete)
+    print(f"File {fileNameDelete} deleted!")
+  except Exception as exception:
+    print(exception)
+
+
+def readFile():
+  fileNameRead = getTextFile()
+  try:
+    fileRead = open(fileNameRead, "r")
+    print(fileRead.read())
+    fileRead.close()
+  except Exception as exception:
+    print(exception)
+
+
+def getTextFile():
+  fileNameInput = input("Enter a file name: ")
+  fileName = ""
+  if not ".txt" in fileNameInput:
+    fileName = fileNameInput + ".txt"
+  else:
+    fileName = fileNameInput
+  return fileName
 
 
 class bcolors:
@@ -53,4 +94,4 @@ class bcolors:
     self.UNDERLINE = ''
 
 
-Main()
+TakeNotes()
